@@ -24,6 +24,27 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 
 ### Quick Start
 
+#### Automated Installation (Recommended)
+
+1. **Clone the repository and navigate to the project directory**
+   ```bash
+   git clone <repository-url>
+   cd company-settings-mcp
+   ```
+
+2. **Run the automated setup script**
+   ```powershell
+   .\setup.ps1
+   ```
+
+   The setup script will automatically:
+   - Install all dependencies
+   - Build the project
+   - Generate or update your Cursor MCP configuration
+   - Test the server startup
+
+#### Manual Installation
+
 1. **Install dependencies**
    ```bash
    npm install
@@ -34,27 +55,10 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
    npm run build
    ```
 
-3. **Set your API tokens**
-   
-   You can use either separate tokens per environment (recommended) or a single token for all environments:
-   
-   **Option A: Separate tokens per environment (recommended)**
-   ```bash
-   export TP_SETTINGS_TOKEN_PD="your-production-token-here"
-   export TP_SETTINGS_TOKEN_IN="your-integration-token-here"  
-   export TP_SETTINGS_TOKEN_AC="your-acceptance-token-here"
-   ```
-   
-   **Option B: Single token for all environments (legacy)**
-   ```bash
-   export TP_SETTINGS_TOKEN="your-api-token-here"
-   ```
-
-4. **Configure Cursor**
+3. **Configure Cursor**
 
    Add to your Cursor settings (`.cursor/mcp.json`):
 
-   **Option A: With separate tokens per environment (recommended)**
    ```json
    {
      "mcpServers": {
@@ -65,21 +69,6 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
            "TP_SETTINGS_TOKEN_PD": "your-production-token-here",
            "TP_SETTINGS_TOKEN_IN": "your-integration-token-here",
            "TP_SETTINGS_TOKEN_AC": "your-acceptance-token-here"
-         }
-       }
-     }
-   }
-   ```
-
-   **Option B: With single token (legacy)**
-   ```json
-   {
-     "mcpServers": {
-       "company-settings": {
-         "command": "node",
-         "args": ["/absolute/path/to/company-settings-mcp/dist/index.js"],
-         "env": {
-           "TP_SETTINGS_TOKEN": "your-api-token-here"
          }
        }
      }
@@ -140,17 +129,13 @@ search_in_setting({
 
 ### Authentication
 
-You can configure authentication using either separate tokens per environment or a single token:
+The MCP server requires separate tokens for each environment:
 
-**Environment-Specific Tokens (Recommended):**
 - `TP_SETTINGS_TOKEN_PD` - Production environment token
 - `TP_SETTINGS_TOKEN_IN` - Integration environment token
 - `TP_SETTINGS_TOKEN_AC` - Acceptance environment token
 
-**Single Token (Legacy):**
-- `TP_SETTINGS_TOKEN` - Single token used for all environments
-
-The system will automatically detect which configuration method you're using. If any environment-specific token is found, it will require all three tokens to be set.
+All three environment tokens must be provided for the server to function properly. The automated setup script includes default tokens for internal Transporeon use.
 
 ## Development
 
@@ -216,9 +201,7 @@ transporeon-company-settings-mcp/
 - Try different environments (pd, in, ac)
 
 ### Authentication Errors
-- Ensure token environment variables are set:
-  - For separate tokens: `TP_SETTINGS_TOKEN_PD`, `TP_SETTINGS_TOKEN_IN`, `TP_SETTINGS_TOKEN_AC`
-  - For single token: `TP_SETTINGS_TOKEN`
+- Ensure all three environment token variables are set: `TP_SETTINGS_TOKEN_PD`, `TP_SETTINGS_TOKEN_IN`, `TP_SETTINGS_TOKEN_AC`
 - Verify tokens have necessary permissions for respective environments
 - Check token expiration with system administrators
 
