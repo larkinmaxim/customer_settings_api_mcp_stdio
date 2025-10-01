@@ -26,10 +26,9 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 
 #### Automated Installation (Recommended)
 
-1. **Clone the repository and navigate to the project directory**
+1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd company-settings-mcp
+   git -c http.sslVerify=false clone https://github.com/larkinmaxim/customer_settings_api_mcp_stdio.git .
    ```
 
 2. **Run the automated setup script**
