@@ -178,3 +178,5 @@ try {
 }
 
 Write-Host "`nSetup completed successfully!" -ForegroundColor Green
+Write-Host "`nPress any key to close this window..." -ForegroundColor Yellow
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

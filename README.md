@@ -32,7 +32,18 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
    ```
 
 2. **Run the automated setup script**
+
+   **Default way (beginner-friendly):**
+   - Right-click on `setup.ps1` in File Explorer
+   - Select "Run with PowerShell" from the context menu
+   - Follow the on-screen prompts
+
+   **Alternative way (advanced users):**
    ```powershell
+   # If execution policy prevents running scripts, first enable it:
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+   
+   # Then run the setup script:
    .\setup.ps1
    ```
 
