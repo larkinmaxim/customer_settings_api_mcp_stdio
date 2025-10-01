@@ -1,0 +1,33 @@
+{
+  "name": "transporeon-company-settings-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for accessing Transporeon company settings API",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "mcp",
+    "company-settings",
+    "transporeon"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9",
+    "dotenv": "^17.2.2",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/xml2js": "^0.4.14",
+    "rimraf": "^5.0.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
