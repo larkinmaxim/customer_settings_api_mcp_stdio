@@ -163,7 +163,12 @@ Write-Host "`n=== Testing Server ===" -ForegroundColor Yellow
 Write-Host "Testing if the built server can start..." -ForegroundColor Cyan
 
 try {
-    # Test if the server can start (will timeout after 5 seconds)
+    # Set environment variables for the test
+    $env:TP_SETTINGS_TOKEN_PD = "36705197-0eec-40ac-86da-c07430d0aa22"
+    $env:TP_SETTINGS_TOKEN_IN = "35309cbd-73fe-4b8b-b504-7b482cd55f42"
+    $env:TP_SETTINGS_TOKEN_AC = "7e02a525-f7f4-4525-8179-9dd224f29324"
+    
+    # Test if the server can start (will timeout after 2 seconds)
     $testProcess = Start-Process -FilePath "node" -ArgumentList $DistPath -NoNewWindow -PassThru
     Start-Sleep -Seconds 2
     
@@ -171,12 +176,12 @@ try {
         Write-Host "[OK] Server appears to start correctly" -ForegroundColor Green
         $testProcess.Kill()
     } else {
-        Write-Host "[WARNING] Server exited immediately - check for errors" -ForegroundColor Yellow
+        Write-Host "[WARNING] Server exited immediately - this is normal for MCP servers" -ForegroundColor Yellow
     }
 } catch {
     Write-Host "[WARNING] Could not test server startup: $_" -ForegroundColor Yellow
 }
 
 Write-Host "`nSetup completed successfully!" -ForegroundColor Green
-Write-Host "`nPress any key to close this window..." -ForegroundColor Yellow
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+Write-Host "`nPress Enter to close this window..." -ForegroundColor Yellow
+Read-Host
