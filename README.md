@@ -7,7 +7,7 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 ## Features
 
 - 🔍 **Smart Search**: Find specific content within large configuration files with line numbers and context
-- 📄 **Line-Based Pagination**: Navigate through large settings efficiently using line ranges 
+- 📄 **Line-Based Pagination**: Navigate through large settings efficiently using line ranges
 - 🎯 **Multi-Environment Support**: Access settings across Production, Integration, and Acceptance environments
 - 🔐 **Secure Authentication**: Bearer token authentication with automatic encoding/decoding
 - ⚡ **Intelligent Processing**: Automatic base64 decoding and XML formatting for readability
@@ -27,27 +27,30 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 #### Automated Installation (Recommended)
 
 1. **Clone the repository**
-   ```bash
-   git -c http.sslVerify=false clone https://github.com/larkinmaxim/customer_settings_api_mcp_stdio.git .
-   ```
 
+   ```bash
+   git -c http.sslVerify=false clone https://github.com/larkinmaxim/customer_settings_api_mcp_stdio.git
+   ```
 2. **Run the automated setup script**
 
    **Default way (beginner-friendly):**
+
    - Right-click on `setup.ps1` in File Explorer
    - Select "Run with PowerShell" from the context menu
    - Follow the on-screen prompts
 
    **Alternative way (advanced users):**
+
    ```powershell
    # If execution policy prevents running scripts, first enable it:
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-   
+
    # Then run the setup script:
    .\setup.ps1
    ```
 
    The setup script will automatically:
+
    - Install all dependencies
    - Build the project
    - Generate or update your Cursor MCP configuration
@@ -56,15 +59,15 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 #### Manual Installation
 
 1. **Install dependencies**
+
    ```bash
    npm install
    ```
-
 2. **Build the project**
+
    ```bash
    npm run build
    ```
-
 3. **Configure Cursor**
 
    Add to your Cursor settings (`.cursor/mcp.json`):
@@ -90,6 +93,7 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 Once configured, the MCP server provides these tools to AI assistants:
 
 ### List Company Settings
+
 ```typescript
 // Get all settings for a company with optional filtering
 list_company_settings({ 
@@ -100,6 +104,7 @@ list_company_settings({
 ```
 
 ### Get Specific Setting with Pagination
+
 ```typescript
 // Get lines 1667-1700 of a specific setting
 get_company_setting({ 
@@ -112,6 +117,7 @@ get_company_setting({
 ```
 
 ### Search Within Settings
+
 ```typescript
 // Find all occurrences of "otherTruckSize" with context
 search_in_setting({ 
@@ -134,7 +140,7 @@ search_in_setting({
 ### Environments
 
 - **`pd`** - Production (default)
-- **`in`** - Integration  
+- **`in`** - Integration
 - **`ac`** - Acceptance
 
 ### Authentication
@@ -177,6 +183,7 @@ transporeon-company-settings-mcp/
 ```
 
 ### Scripts
+
 - `npm run build` - Compile TypeScript to JavaScript
 - `npm start` - Run the compiled server
 - `npm run dev` - Development mode with watch
@@ -206,21 +213,25 @@ transporeon-company-settings-mcp/
 ## Troubleshooting
 
 ### Connection Issues
+
 - Verify VPN connection is active
 - Check if you can access Transporeon admin dashboard
 - Try different environments (pd, in, ac)
 
 ### Authentication Errors
+
 - Ensure all three environment token variables are set: `TP_SETTINGS_TOKEN_PD`, `TP_SETTINGS_TOKEN_IN`, `TP_SETTINGS_TOKEN_AC`
 - Verify tokens have necessary permissions for respective environments
 - Check token expiration with system administrators
 
 ### No Results
+
 - Verify company ID is correct
 - Check if setting exists in the specified environment
 - Ensure correct setting key name format
 
 ### Performance Issues
+
 - Use pagination for large settings (limit < 50 lines recommended)
 - Search for specific content instead of retrieving entire settings
 - Consider using different environments if one is slow
@@ -228,7 +239,7 @@ transporeon-company-settings-mcp/
 ## Support
 
 - **API Issues**: Contact the Company Settings API maintainer
-- **Network Access**: Contact Transporeon IT for VPN access and network configuration  
+- **Network Access**: Contact Transporeon IT for VPN access and network configuration
 - **Token Management**: Contact system administrators for API token issues
 - **MCP Issues**: Check the main project documentation or development team
 
