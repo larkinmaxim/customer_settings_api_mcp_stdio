@@ -165,15 +165,17 @@ npm start
 ### Project Structure
 
 ```
-company-settings-mcp/
+transporeon-company-settings-mcp/
 ├── src/
 │   ├── index.ts          # MCP server wiring and request handlers
 │   ├── handlers.ts       # Tool implementations  
 │   ├── settingsClient.ts # API client and business logic
 │   ├── toolSchemas.ts    # Tool schemas exposed to MCP
 │   ├── config.ts         # Configuration management
+│   ├── constants.ts      # Application constants
 │   └── types.ts          # TypeScript interfaces
 ├── dist/                 # Compiled JavaScript (generated)
+├── Documentation/        # Project documentation
 ├── package.json
 ├── tsconfig.json
 └── README.md
