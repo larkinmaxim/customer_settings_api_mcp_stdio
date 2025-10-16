@@ -19,42 +19,48 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 
 - Node.js 18 or higher
 - VPN access to Transporeon internal network
-- Valid API bearer token
+- Valid API tokens for PD, AC, IN
 - [Cursor IDE](https://cursor.sh/) or any MCP-compatible client
 
 ### Quick Start
 
-#### Automated Installation (Recommended)
+#### Secure Containerized Installation (Recommended)
 
 1. **Clone the repository**
 
    ```bash
-   git -c http.sslVerify=false clone https://github.com/larkinmaxim/customer_settings_api_mcp_stdio.git
+   git -c http.sslVerify=false clone https://github.com/larkinmaxim/customer_settings_api_mcp_http.git
    ```
-2. **Run the automated setup script**
-
-   **Default way (beginner-friendly):**
-
-   - Right-click on `setup.ps1` in File Explorer
-   - Select "Run with PowerShell" from the context menu
-   - Follow the on-screen prompts
-
-   **Alternative way (advanced users):**
+2. **Run the secure setup script**
 
    ```powershell
    # If execution policy prevents running scripts, first enable it:
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
-   # Then run the setup script:
-   .\setup.ps1
+   # Navigate to project directory
+   cd customer_settings_api_mcp_http
+
+   # Run secure containerized setup
+   .\Secure-Setup.ps1
    ```
 
-   The setup script will automatically:
+   The secure setup script will:
 
-   - Install all dependencies
-   - Build the project
-   - Generate or update your Cursor MCP configuration
-   - Test the server startup
+   - ✅ **Securely collect API tokens** (with input masking)
+   - ✅ **Create Podman secrets** (encrypted token storage)
+   - ✅ **Build hardened container** (non-root, read-only filesystem)
+   - ✅ **Deploy with security best practices**
+   - ✅ **Test deployment and token validation**
+
+   **Available options:**
+
+   ```powershell
+   .\Secure-Setup.ps1              # Full secure setup
+   .\Secure-Setup.ps1 -TokensOnly  # Rotate API tokens only
+   .\Secure-Setup.ps1 -BuildOnly   # Build container only
+   .\Secure-Setup.ps1 -DeployOnly  # Deploy existing container
+   .\Secure-Setup.ps1 -Clean       # Clean then full setup
+   ```
 
 #### Manual Installation
 
@@ -70,7 +76,21 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
    ```
 3. **Configure Cursor**
 
-   Add to your Cursor settings (`.cursor/mcp.json`):
+   **For containerized deployment (recommended):**
+
+   ```json
+   {
+     "mcpServers": {
+       "company-settings": {
+         "command": "podman",
+         "args": ["exec", "-i", "transporeon-mcp", "node", "dist/index.js"],
+         "env": {}
+       }
+     }
+   }
+   ```
+
+   **For manual installation (tokens in configuration):**
 
    ```json
    {
@@ -87,6 +107,8 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
      }
    }
    ```
+
+   **Security Note**: The containerized approach is strongly recommended as it keeps tokens secure in Podman secrets rather than in configuration files.
 
 ## Usage
 
@@ -151,7 +173,18 @@ The MCP server requires separate tokens for each environment:
 - `TP_SETTINGS_TOKEN_IN` - Integration environment token
 - `TP_SETTINGS_TOKEN_AC` - Acceptance environment token
 
-All three environment tokens must be provided for the server to function properly. The automated setup script includes default tokens for internal Transporeon use.
+All three environment tokens must be provided for the server to function properly.
+
+### Token Rotation
+
+For routine token maintenance, use the secure token rotation feature:
+
+```bash
+# Rotate all API tokens without rebuilding container
+.\Secure-Setup.ps1 -TokensOnly
+```
+
+This will prompt for new tokens and update them securely without interrupting service for longer than a container restart.
 
 ## Development
 
@@ -166,7 +199,7 @@ npm start
 ### Project Structure
 
 ```
-transporeon-company-settings-mcp/
+customer_settings_api_mcp_http/
 ├── src/
 │   ├── index.ts          # MCP server wiring and request handlers
 │   ├── handlers.ts       # Tool implementations  
@@ -220,9 +253,50 @@ transporeon-company-settings-mcp/
 
 ### Authentication Errors
 
+**For containerized deployment:**
+
+```powershell
+# Check if tokens are properly configured in secrets
+podman secret ls | findstr tp_token
+
+# Test tokens manually
+podman exec transporeon-mcp node -e "const { verifyEnvironmentTokens } = require('./dist/handlers.js'); verifyEnvironmentTokens().then(console.log).catch(console.error);"
+
+# Rotate tokens if needed
+.\Secure-Setup.ps1 -TokensOnly
+```
+
+**For manual installation:**
+
 - Ensure all three environment token variables are set: `TP_SETTINGS_TOKEN_PD`, `TP_SETTINGS_TOKEN_IN`, `TP_SETTINGS_TOKEN_AC`
 - Verify tokens have necessary permissions for respective environments
 - Check token expiration with system administrators
+
+### Token Management Issues
+
+**Token Rotation Errors:**
+
+```powershell
+# If container is not running, start it first
+podman ps --filter name=transporeon-mcp
+podman start transporeon-mcp  # if not running
+
+# Then rotate tokens
+.\Secure-Setup.ps1 -TokensOnly
+```
+
+**Container Issues:**
+
+```powershell
+# Check container logs
+podman logs transporeon-mcp --tail 50
+
+# Restart container
+podman restart transporeon-mcp
+
+# Full redeployment if needed
+.\Secure-Setup.ps1 -Clean
+```
 
 ### No Results
 
