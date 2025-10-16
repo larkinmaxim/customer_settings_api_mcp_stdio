@@ -82,9 +82,7 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
    {
      "mcpServers": {
        "company-settings": {
-         "command": "podman",
-         "args": ["exec", "-i", "transporeon-mcp", "node", "dist/index.js"],
-         "env": {}
+         "url": "http://localhost:3001/mcp"
        }
      }
    }
@@ -97,7 +95,7 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
      "mcpServers": {
        "company-settings": {
          "command": "node",
-         "args": ["/absolute/path/to/company-settings-mcp/dist/index.js"],
+         "args": ["/absolute/path/to/customer_settings_api_mcp_http/dist/index.js"],
          "env": {
            "TP_SETTINGS_TOKEN_PD": "your-production-token-here",
            "TP_SETTINGS_TOKEN_IN": "your-integration-token-here",
@@ -108,7 +106,11 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
    }
    ```
 
-   **Security Note**: The containerized approach is strongly recommended as it keeps tokens secure in Podman secrets rather than in configuration files.
+   **Security Note**: The containerized approach is strongly recommended as it:
+   - ✅ Keeps tokens secure in Podman secrets (not in configuration files)
+   - ✅ Runs the server in an isolated container environment  
+   - ✅ Uses HTTP communication to the containerized MCP server
+   - ✅ Automatically handles token injection at container runtime
 
 ## Usage
 
