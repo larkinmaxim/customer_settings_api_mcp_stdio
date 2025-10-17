@@ -77,6 +77,7 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 3. **Configure Cursor**
 
    **For containerized deployment (recommended):**
+<<<<<<< HEAD
 
    ```json
    {
@@ -89,11 +90,14 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
    ```
 
    **For manual installation (tokens in configuration):**
+=======
+>>>>>>> df06bff6bf4e9499b9a995c6bb688ad485161092
 
    ```json
    {
      "mcpServers": {
        "company-settings": {
+<<<<<<< HEAD
          "command": "node",
          "args": ["/absolute/path/to/customer_settings_api_mcp_http/dist/index.js"],
          "env": {
@@ -101,10 +105,16 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
            "TP_SETTINGS_TOKEN_IN": "your-integration-token-here",
            "TP_SETTINGS_TOKEN_AC": "your-acceptance-token-here"
          }
+=======
+         "url": "http://localhost:3001/mcp"
+>>>>>>> df06bff6bf4e9499b9a995c6bb688ad485161092
        }
      }
    }
    ```
+  
+
+   **Security Note**: The containerized approach is strongly recommended as it keeps tokens secure in Podman secrets rather than in configuration files.
 
    **Security Note**: The containerized approach is strongly recommended as it:
    - ✅ Keeps tokens secure in Podman secrets (not in configuration files)
