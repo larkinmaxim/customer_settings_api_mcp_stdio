@@ -87,9 +87,7 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
    }
    ```
 
-  ![1760679894654](image/README/1760679894654.png)![1760679920851](image/README/1760679920851.png)![1760679938847](image/README/1760679938847.png)
-
-   **Security Note**: The containerized approach is strongly recommended as it keeps tokens secure in Podman secrets rather than in configuration files.
+  **Security Note**: The containerized approach is strongly recommended as it keeps tokens secure in Podman secrets rather than in configuration files.
 
 ## Usage
 
