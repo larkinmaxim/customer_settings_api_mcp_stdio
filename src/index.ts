@@ -10,6 +10,7 @@ dotenv.config({ path: join(__dirname, '..', '.env') });
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { CallToolRequestSchema, ListResourcesRequestSchema, ListToolsRequestSchema, ReadResourceRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { loadConfig, validateToken } from './config.js';
 import {
@@ -92,18 +93,56 @@ async function main() {
     }
     console.error('✅ Token validation successful.');
 
-    // Start server
-    const args = process.argv.slice(2);
-    const transport = args.includes('--transport') && args[args.indexOf('--transport') + 1];
+  // Start server
+  const args = process.argv.slice(2);
+  const transportType = args.includes('--transport') ? args[args.indexOf('--transport') + 1] : 'stdio';
+  const port = args.includes('--port') ? parseInt(args[args.indexOf('--port') + 1]) : 3001;
 
-    if (transport === 'streamable-http') {
-      console.error('HTTP transport not yet implemented. Please use stdio transport.');
-      process.exit(1);
-    } else {
-      const transport = new StdioServerTransport();
-      await server.connect(transport);
-      console.error('🚀 Transporeon Company Settings MCP Server running on stdio transport');
-    }
+  if (transportType === 'streamable-http') {
+    const transport = new StreamableHTTPServerTransport({ 
+      sessionIdGenerator: undefined  // Stateless mode - no session management
+    });
+    await server.connect(transport);
+    
+    // Create HTTP server to handle requests
+    const http = await import('node:http');
+    const httpServer = http.createServer(async (req, res) => {
+      // Enable CORS for web clients
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      
+      if (req.method === 'OPTIONS') {
+        res.writeHead(200);
+        res.end();
+        return;
+      }
+      
+      // Parse request body for POST requests
+      let body = '';
+      if (req.method === 'POST') {
+        req.on('data', chunk => body += chunk.toString());
+        req.on('end', () => {
+          try {
+            const parsedBody = JSON.parse(body);
+            transport.handleRequest(req, res, parsedBody);
+          } catch (error) {
+            transport.handleRequest(req, res);
+          }
+        });
+      } else {
+        transport.handleRequest(req, res);
+      }
+    });
+    
+    httpServer.listen(port, () => {
+      console.error(`🚀 Transporeon Company Settings MCP Server running on HTTP transport at http://localhost:${port}`);
+    });
+  } else {
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+    console.error('🚀 Transporeon Company Settings MCP Server running on stdio transport');
+  }
   } catch (error) {
     console.error('❌ Failed to start MCP server:');
     console.error(error instanceof Error ? error.message : String(error));

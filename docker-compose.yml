@@ -1,0 +1,95 @@
+# Docker Compose configuration for Transporeon Company Settings MCP Server
+# Provides secure, production-ready deployment with Podman secrets
+
+version: '3.8'
+
+services:
+  transporeon-mcp:
+    image: transporeon-mcp-server:latest
+    container_name: transporeon-mcp
+    restart: unless-stopped
+    
+    # Security-first configuration
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    user: "1001:1001"
+    
+    # Temporary filesystem for runtime files
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=100m
+    
+    # Environment variables (non-sensitive configuration only)
+    environment:
+      - NODE_ENV=production
+      - TP_SETTINGS_DEFAULT_ENV=pd
+      - TP_SETTINGS_TIMEOUT=30000
+      # Logging configuration
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=json
+    
+    # Secrets injection (API tokens)
+    # These must be created beforehand with: podman secret create <name> <token_file>
+    secrets:
+      - source: tp_token_pd_secret
+        target: TP_SETTINGS_TOKEN_PD
+        type: env
+      - source: tp_token_in_secret
+        target: TP_SETTINGS_TOKEN_IN
+        type: env
+      - source: tp_token_ac_secret
+        target: TP_SETTINGS_TOKEN_AC
+        type: env
+    
+    # Network configuration - use host network for VPN access
+    network_mode: host
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'  
+          memory: 128M
+    
+    # Health check configuration
+    healthcheck:
+      test: ["CMD", "node", "-e", "const config = require('./dist/config.js'); config.loadConfig(); console.log('Health check passed')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Volume mounts for logs (optional)
+    volumes:
+      - type: bind
+        source: ./logs
+        target: /var/log/transporeon-mcp
+        bind:
+          create_host_path: true
+    
+    # Labels for management and monitoring
+    labels:
+      - "com.transporeon.service=mcp-server"
+      - "com.transporeon.version=1.0.0"
+      - "com.transporeon.environment=production"
+
+# External secrets (must be created separately)
+secrets:
+  tp_token_pd_secret:
+    external: true
+    name: tp_token_pd_secret
+  tp_token_in_secret:
+    external: true
+    name: tp_token_in_secret
+  tp_token_ac_secret:
+    external: true
+    name: tp_token_ac_secret
+
+# Networks (using host network for VPN access)
+networks:
+  default:
+    external: true
+    name: host

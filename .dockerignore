@@ -1,0 +1,111 @@
+# Docker ignore file for Transporeon MCP Server
+# Excludes unnecessary files from build context for security and efficiency
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Node.js
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn
+
+# Environment files (SECURITY: Never include in image)
+.env
+.env.*
+*.env
+
+# Token files (SECURITY: Never include in image)
+token_*.txt
+*_token.txt
+*_secret.txt
+*.key
+*.pem
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Documentation (not needed in runtime)
+Documentation/
+README.md
+*.md
+docs/
+
+# Build artifacts (will be generated during build)
+dist/
+build/
+coverage/
+.nyc_output
+
+# Test files
+test/
+tests/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+__tests__/
+jest.config.*
+.coverage
+
+# CI/CD files
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+Jenkinsfile
+
+# Container files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# PowerShell scripts (Windows-specific, not needed in container)
+*.ps1
+
+# Logs
+logs/
+*.log
+log/
+
+# Runtime files
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary files
+tmp/
+temp/
+.tmp
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Package manager lock files (we use package-lock.json in COPY instruction)
+yarn.lock
+
+# TypeScript config is needed during build, so we don't exclude it
+
+# ESLint and other linting
+.eslintrc*
+.prettierrc*
+.stylelintrc*
+
+# Optional tools config
+.editorconfig
