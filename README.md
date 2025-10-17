@@ -20,16 +20,15 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 - Node.js 18 or higher
 - VPN access to Transporeon internal network
 - Valid API tokens for PD, AC, IN
+- Podman Desktop
 - [Cursor IDE](https://cursor.sh/) or any MCP-compatible client
 
-### Quick Start
-
-#### Secure Containerized Installation (Recommended)
+### Quick Startecure Containerized Installation (Recommended)
 
 1. **Clone the repository**
 
    ```bash
-   git -c http.sslVerify=false clone https://github.com/larkinmaxim/customer_settings_api_mcp_http.git
+   git -c http.sslVerify=false clone https://github.com/larkinmaxim/mcp_customer_settings_http.git
    ```
 2. **Run the secure setup script**
 
@@ -38,7 +37,7 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
    # Navigate to project directory
-   cd customer_settings_api_mcp_http
+   cd mcp_customer_settings_http
 
    # Run secure containerized setup
    .\Secure-Setup.ps1
@@ -77,7 +76,6 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
 3. **Configure Cursor**
 
    **For containerized deployment (recommended):**
-<<<<<<< HEAD
 
    ```json
    {
@@ -89,38 +87,9 @@ A Model Context Protocol (MCP) server that provides intelligent access to Transp
    }
    ```
 
-   **For manual installation (tokens in configuration):**
-=======
->>>>>>> df06bff6bf4e9499b9a995c6bb688ad485161092
-
-   ```json
-   {
-     "mcpServers": {
-       "company-settings": {
-<<<<<<< HEAD
-         "command": "node",
-         "args": ["/absolute/path/to/customer_settings_api_mcp_http/dist/index.js"],
-         "env": {
-           "TP_SETTINGS_TOKEN_PD": "your-production-token-here",
-           "TP_SETTINGS_TOKEN_IN": "your-integration-token-here",
-           "TP_SETTINGS_TOKEN_AC": "your-acceptance-token-here"
-         }
-=======
-         "url": "http://localhost:3001/mcp"
->>>>>>> df06bff6bf4e9499b9a995c6bb688ad485161092
-       }
-     }
-   }
-   ```
-  
+  ![1760679894654](image/README/1760679894654.png)![1760679920851](image/README/1760679920851.png)![1760679938847](image/README/1760679938847.png)
 
    **Security Note**: The containerized approach is strongly recommended as it keeps tokens secure in Podman secrets rather than in configuration files.
-
-   **Security Note**: The containerized approach is strongly recommended as it:
-   - ✅ Keeps tokens secure in Podman secrets (not in configuration files)
-   - ✅ Runs the server in an isolated container environment  
-   - ✅ Uses HTTP communication to the containerized MCP server
-   - ✅ Automatically handles token injection at container runtime
 
 ## Usage
 
@@ -211,7 +180,7 @@ npm start
 ### Project Structure
 
 ```
-customer_settings_api_mcp_http/
+mcp_customer_settings_http/
 ├── src/
 │   ├── index.ts          # MCP server wiring and request handlers
 │   ├── handlers.ts       # Tool implementations  
